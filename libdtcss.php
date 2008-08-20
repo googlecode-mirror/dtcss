@@ -25,7 +25,7 @@
  *  That means, without me,
  *  the main file won't work.
  *  And the main file won't work without me.
- *  You know.
+ *  You know. SVN version.
  */
 
 /* This is a comment. */

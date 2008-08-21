@@ -41,13 +41,14 @@ if (file_exists($filename) && is_file($filename)
 	$hash = $fnhash . '-' . filemtime($filename);
 	$cachebase = './cache/';
 	$cachefile = $cachebase . $hash . '.cssc';
-	if (0 && file_exists($cachefile)) {
+	$filedata = file_get_contents($filename);
+	if (strpos($filedata, '<#') === false && strpos($filedata, '#ifexpr') === false && file_exists($cachefile)) {
 		echo '/* cached */
 
 ';
 		readfile ($cachefile);
 	} else {
-		$data = DtCSS($filename, file_get_contents($filename), $j);
+		$data = DtCSS($filename, $filedata, $j);
 		$dir = opendir($cachebase);
 		while ($entry = readdir($dir)) {
 			if (substr($entry, 0, strlen($fnhash)) == $fnhash)  {

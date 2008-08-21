@@ -39,6 +39,7 @@ define ('DTCSS_MATCH', '~
 		"(?:\\\\.|[^"])*"                   # double quotes
 	|	\'(?:\\\\.|[^\'])*\'                # single quotes
 	|   /\\*([\\s\\S]*?)\\*/                # comments
+	|   <\\#(?:[\s\S]+?)\\#>
 	|	(?:mix|shade|lighter|darker|variant)\\s*
 			\\(
 	|   \\([^\\)]*\\)                       # match parens
@@ -47,6 +48,8 @@ define ('DTCSS_MATCH', '~
 	|	[^{},;:"\'\\[\\]\\s\\(\\)/]+        # string
 	|   [\\s\\S]
 		~x');
+
+include dirname(__FILE__) . '/libdtexpression.php';
 
 /* This global variable holds the list of available HTML colors */
 $DtCSS__colors = array();
@@ -73,7 +76,7 @@ function DtCSS($file, $css, $macros = array()) {
 
 	/* Structures -> Rules */
 	$list = array();
-	DtCSS__secondpass ($next, '', $list);
+	DtCSS__secondpass ($next, '', $list, $macros);
 
 	/* Ok now we have the rules.
 	   Let's output it nicely. */
@@ -299,6 +302,25 @@ function DtCSS__preprocess($file, $text, &$macro) {
 		if (strtolower(trim($v)) == '#endif') {
 			if ($level > 0) {
 				$level --;
+			}
+			continue;
+		} else if (strtolower(trim($v)) == '#else') {
+			if ($level == 1) {
+				$level --;
+			} else if ($level <= 0) {
+				$level ++;
+			}
+			continue;
+		} else if (preg_match('~^[#]if(n?)expr\\s+(.*)$~is', trim($v), $m)) {
+			if ($level > 0) {
+				$level ++;
+			} else {
+				$isset = DtCSS__DtExpression($m[2], $macro);
+				$negate = strtolower($m[1]) == 'n';
+				if ($negate) $isset = !$isset;
+				if (!$isset) {
+					$level ++;
+				}
 			}
 			continue;
 		} else if (preg_match('~^[#]if(n?)def\\s+(\\w+)$~is', trim($v), $m)) {
@@ -551,8 +573,32 @@ function DtCSS__makecolor($a) {
 	return '#' . DtCSS__hexcolor($a[0]) . DtCSS__hexcolor($a[1]) . DtCSS__hexcolor($a[2]);
 }
 
+function DtCSS__DtExpression($expr, &$macros) {
+	$d = '';
+	$dtexsub = $expr;
+	if (preg_match_all(DTEXPR_MATCH, $dtexsub, $dtextokens, PREG_SET_ORDER)) {
+		$dtexcode = '';
+		foreach ($dtextokens as $dtexv) {
+			if (isset($macros[$dtexv[0]])) {
+				$mct = $macros[$dtexv[0]];
+				if (!is_numeric($mct)) {
+					$mct = DtExpression__quotestring($mct);
+				}
+				$dtexcode .= $mct;
+			} else {
+				$dtexcode .= $dtexv[0];
+			}
+			$dtexcode .= ' ';
+		}
+		//$d = $dtexcode;
+		$d = DtExpression($dtexcode);
+	}
+	return $d;
+
+}
+
 /* This function parses the nested CSS structures and explode it. */
-function DtCSS__secondpass($tokens, $old_selector, &$output) {
+function DtCSS__secondpass($tokens, $old_selector, &$output, &$macros) {
 	$my_sel = array();
 	$output[] = &$my_sel;
 	$selector = '';
@@ -571,7 +617,7 @@ function DtCSS__secondpass($tokens, $old_selector, &$output) {
 			   Combine the selectors and put in the rules. */
 			$sel = trim($selector);
 			$sel = DtCSS__combineselector($old_selector, $sel);
-			DtCSS__secondpass ($v, $sel, $output);
+			DtCSS__secondpass ($v, $sel, $output, $macros);
 			$selector = '';
 
 		} else if (substr($v, 0, 2) == '//') {
@@ -583,6 +629,10 @@ function DtCSS__secondpass($tokens, $old_selector, &$output) {
 
 			/* Comments */
 			$my_sel[] = $v;
+
+		} else if (substr($v, 0, 2) == '<#') {
+
+			$selector .= DtCSS__DtExpression(substr(substr($v, 2), 0, -2), $macros);
 
 		} else if ($v == ';') {
 
@@ -612,6 +662,7 @@ function DtCSS__secondpass($tokens, $old_selector, &$output) {
 				   So now I can parse the expression!!! HAHA! */
 				$selector .= DtCSS__makecolor(DtCSS__expression(preg_replace('~\\s~', '', $buffer)));
 			}
+
 		} else {
 
 			/* Normal syntax */

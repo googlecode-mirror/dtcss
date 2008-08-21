@@ -99,7 +99,6 @@ $DtExpr__FunctionMap = array(
 	'cmp' => 'strcmp',
 	'strip_tags' => 'strip_tags',
 	'stristr' => 'stristr',
-	'istr' => 'stristr',
 	'strnatcasecmp' => 'strnatcasecmp',
 	'natcasecmp' => 'strnatcasecmp',
 	'strnatcmp' => 'strnatcmp',
@@ -129,6 +128,13 @@ $DtExpr__FunctionMap = array(
 	'strtoupper' => 'strtoupper',
 	'toupper' => 'strtoupper',
 	'upper' => 'strtoupper',
+	'str' => 'strval',
+	'strval' => 'strval',
+	'int' => 'intval',
+	'intval' => 'intval',
+	'float' => 'floatval',
+	'floatval' => 'floatval',
+	'escape' => 'DtExpression__quotestring',
 );
 
 function DtExpression($data) {
@@ -136,6 +142,13 @@ function DtExpression($data) {
 	$struct = DtExpression__MakeStruct($tokens);
 	$code   = DtExpression__GenerateCode($struct);
 	return @eval('return ' . $code . ';');
+}
+
+function DtExpression__quotestring($text) {
+	return '\'' . strtr($text, array(
+		'\\' => '\\\\',
+		'\'' => '\\\''
+	)) . '\'';
 }
 
 function DtExpression__GenerateCode($struct) {
@@ -214,8 +227,8 @@ function DtExpression__MakeStruct($tokens) {
 	$final  = array();
 	$buffer = array();
 	$level  = 0;
-	foreach ($tokens as $v) {
-		if ($v[0] == DTEXPR_OPERATOR && $v[1] == '(') {
+	foreach ($tokens as $k => $v) {
+		if ($v[0] == DTEXPR_OPERATOR && $v[1] == '(' && $k != 0) {
 			if ($level == 0) {
 				$buffer = array(DTEXPR_STRUCT, array());
 			}
@@ -229,6 +242,7 @@ function DtExpression__MakeStruct($tokens) {
 		if ($v[0] == DTEXPR_OPERATOR && $v[1] == ')' && $level > 0) {
 			$level --;
 			if ($level == 0) {
+				$buffer[1] = DtExpression__MakeStruct($buffer[1]);
 				$final[] = $buffer;
 			}
 		}

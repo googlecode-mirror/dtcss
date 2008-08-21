@@ -573,6 +573,9 @@ function DtCSS__makecolor($a) {
 	return '#' . DtCSS__hexcolor($a[0]) . DtCSS__hexcolor($a[1]) . DtCSS__hexcolor($a[2]);
 }
 
+/* This thing evaluates an expression and returns the result.
+   It also process macros. Really powerful!
+   It uses libdtexpression.php that comes with this package. */
 function DtCSS__DtExpression($expr, &$macros) {
 	$d = '';
 	$dtexsub = $expr;

@@ -1,4 +1,4 @@
-#summary Quick installation guide for most users.
+﻿#summary Quick installation guide for most users.
 #labels Featured
 
 =Quick Installation=
@@ -11,6 +11,10 @@ Now go to document root, and make a folder called `dtcss`. Then extract the file
   * /dtcss/libdtcss.php
   * /dtcss/libdtexpression.php
   * /dtcss/rewrite_css.php
+
+Create another folder called `cache` inside the `dtcss` folder. The cache files will be stored here. Don't forget to chmod the cache folder to be writable by the web application. Now you should have this added.
+
+  * /dtcss/cache/
 
 Go back to your document root and edit your `.htaccess` file (or your web server configuration file), and add these lines:
 

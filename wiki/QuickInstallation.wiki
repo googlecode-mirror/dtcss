@@ -1,4 +1,6 @@
+#summary Quick installation guide for most users.
 #labels Featured
+
 =Quick Installation=
 
 First, to install DtCSS, you need to [http://code.google.com/p/dtcss/downloads/list download] it first. You need to have `mod_rewrite` or similar modules enabled for it to work.
@@ -62,4 +64,4 @@ a:hover {
 }}}
 
 =See also=
-[SyntaxGuide]
+  * [SyntaxGuide Syntax Guide]

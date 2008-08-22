@@ -1,1 +1,144 @@
 #summary Syntax Guide
+#labels Featured
+
+=1. Nested CSS ruleset=
+
+You can put rulesets inside of a ruleset. This makes it easier to select elements in the same parents. Just make sure that you have put a semicolon (`;`) before the selector.
+
+|| *`__self__`* || Use `__self__` to prevent space from being added before it. Without `__self__` it would be `h1 a :link` which is not the right thing. ||
+
+==Input Example==
+{{{
+h1 {
+    color: red;
+    a {
+        font-size: 0.8em;
+        __self__:link {
+            color: blue;
+        }
+        __self__:visited {
+            color: purple;
+        }
+    }
+}
+}}}
+
+==Output==
+{{{
+h1 {
+    color: red;
+}
+
+h1 a {
+    font-size: 0.8em;
+}
+
+h1 a:link {
+    color: blue;
+}
+
+h1 a:visited {
+    color: purple;
+}
+}}}
+
+=2. Macros=
+
+You can create macros by using the `#define` directive. Macros are useful when you want to use common values for something, e.g., colors, fonts. Macros can then be used at almost anywhere in the CSS file. A reference to the macro must appear *after* the define directive.
+
+|| *`#define`* _`MACRO_NAME value`_ || Creates a macro with the name `MACRO_NAME` with the value `value` ||
+
+==Input Example==
+{{{
+#define HEADING_COLOR red
+#define HEADING_ELEMENTS h1, h2, h3, h4, h5, h6
+
+HEADING_ELEMENTS {
+	color: HEADING_COLOR;
+}
+}}}
+
+==Output==
+{{{
+h1, h2, h3, h4, h5, h6 {
+    color: red;
+}
+}}}
+
+=3. Variables=
+
+When a query string variable is added to the end of CSS file, it will become a macro. The macro's name is processed like this.
+
+  # The macro's name is changed to upper case.
+  # All non-alpha numeric characters are converted to underscores.
+
+That means that by visiting this URL:
+
+    `test.ipu.css?font-name=Verdana&font-size=20px`
+
+Would create 2 macros like this:
+
+|| *Macro Name* || *Value* ||
+|| FONT_NAME    || Verdana ||
+|| FONT_SIZE    || 20px    ||
+
+The files will be cached uniquely for that set of parameters.
+
+==Input Example==
+{{{
+body, input, select, option, textarea {
+	font: FONT_SIZE FONT_NAME;
+}
+}}}
+
+==Output Example==
+{{{
+body, input, select, option, textarea {
+    font: 20px Verdana;
+}
+}}}
+
+=Include CSS code from other files=
+You can include other files to use with DtCSS.
+
+|| *`#include`* _`"filename.css"`_ || This will include the file named `filename.css` to the current CSS file for preprocessing. Double quotes around the file name are *required*. ||
+
+==Input Example==
+{{{
+#include "layout.css"
+#include "forms.css"
+body {
+    #include "body.css"
+}
+}}}
+
+==Output==
+{{{
+/* Contents of layout.css */
+/* Contents of forms.css */
+body {
+    /* Contents of body.css */
+}
+}}}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

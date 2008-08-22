@@ -5,7 +5,7 @@
 
 DtCSS is under development. When new syntaxes are introduced they will be mentioned.
 
-For example, if I say (R6) it means that syntax is available on DtCSS R6 and later.
+For example, if I say (R8) it means that syntax is available on DtCSS R8 and later.
 
 =1. Nested CSS ruleset=
 
@@ -133,9 +133,9 @@ You can use conditional directives to enable a line of CSS code when some condit
 
 || *`#ifdef`* _`MACRO_NAME`_ || Will process if a macro named `MACRO_NAME` exists. ||
 || *`#ifndef`* _`MACRO_NAME`_ || Will process if a macro named `MACRO_NAME` does not exists. ||
-|| *`#ifexpr`* _`expression`_ || (R6) Will process if an [ExpressionGuide expression] evaluates to true. ||
+|| *`#ifexpr`* _`expression`_ || (R8) Will process if an [ExpressionGuide expression] evaluates to true. ||
 || *`#endif`* || Ends the matching conditional directive. ||
-|| *`#else`* || (R6) Will process if the last matched conditional directive is true. ||
+|| *`#else`* || (R8) Will process if the last matched conditional directive is true. ||
 
   * [ConditionalDirectivesExamples Examples of conditional directives.]
 
@@ -152,8 +152,6 @@ Will be converted to
 {{{
 /* hello */
 }}}
-
-
 
 
 

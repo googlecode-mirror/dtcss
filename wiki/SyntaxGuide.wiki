@@ -1,6 +1,12 @@
 #summary Syntax Guide
 #labels Featured
 
+=Compatibility=
+
+DtCSS is under development. When new syntaxes are introduced they will be mentioned.
+
+For example, if I say (R6) it means that syntax is available on DtCSS R6 and later.
+
 =1. Nested CSS ruleset=
 
 You can put rulesets inside of a ruleset. This makes it easier to select elements in the same parents. Just make sure that you have put a semicolon (`;`) before the selector.
@@ -98,7 +104,7 @@ body, input, select, option, textarea {
 }
 }}}
 
-=Include CSS code from other files=
+=4. Include CSS code from other files=
 You can include other files to use with DtCSS.
 
 || *`#include`* _`"filename.css"`_ || This will include the file named `filename.css` to the current CSS file for preprocessing. Double quotes around the file name are *required*. ||
@@ -121,14 +127,31 @@ body {
 }
 }}}
 
+=5. Conditional directives=
 
+You can use conditional directives to enable a line of CSS code when some condition is true.
 
+|| *`#ifdef`* _`MACRO_NAME`_ || Will process if a macro named `MACRO_NAME` exists. ||
+|| *`#ifndef`* _`MACRO_NAME`_ || Will process if a macro named `MACRO_NAME` does not exists. ||
+|| *`#ifexpr`* _`expression`_ || (R6) Will process if an [ExpressionGuide expression] evaluates to true. ||
+|| *`#endif`* || Ends the matching conditional directive. ||
+|| *`#else`* || (R6) Will process if the last matched conditional directive is true. ||
 
+  * [ConditionalDirectivesExamples Examples of conditional directives.]
 
+=6. Single line comments=
 
+Single line comments will be converted to multiline comments, automatically.
 
+{{{
+// hello
+}}}
 
+Will be converted to
 
+{{{
+/* hello */
+}}}
 
 
 

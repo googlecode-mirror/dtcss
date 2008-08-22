@@ -153,11 +153,55 @@ Will be converted to
 /* hello */
 }}}
 
+=7. Template ruleset=
 
+When a set of declarations are used multiple times, you can specify an abstract ruleset for using with multiple selectors.
 
+==Input example==
+{{{
+%thickbox {
+    border: 2px solid #000;
+    margin: 0.2em 1em;
+    padding: 0.8em;
+}
 
+.info {
+	use: thickbox;
+	border-color: green;
+}
 
+.error {
+	use: thickbox;
+	border-color: red;
+}
+}}}
 
+==Output==
+{{{
+.info {
+    /* % thickbox */
+    border: 2px solid #000;
+    margin: 0.2em 1em;
+    padding: 0.8em;
+    /* thickbox % */
+    border-color: green;
+}
+
+.error {
+    /* % thickbox */
+    border: 2px solid #000;
+    margin: 0.2em 1em;
+    padding: 0.8em;
+    /* thickbox % */
+    border-color: red;
+}
+}}}
+
+=Color Processing=
+
+This is one of unique things in DtCSS. It comes with [ColorProcessing Color Processing].
+
+  * [ColorProcessing Read about color processing]
 
 
 

@@ -127,4 +127,6 @@ You need to put parens like in PHP.
 
 So it is up to you whether to use parens or not. If you are familiar you can omit the parentheses, stars and dots. Just be careful. If you are not, you are recommended to use the PHP style.
 
+= Allowed functions =
 
+Allowed functions are listed in `libdtexpression.php`

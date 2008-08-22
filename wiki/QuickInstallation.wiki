@@ -62,4 +62,4 @@ a:hover {
 }}}
 
 =See also=
-[DtCSSSyntaxGuide]
+[SyntaxGuide]

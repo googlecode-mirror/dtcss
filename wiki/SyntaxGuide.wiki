@@ -133,7 +133,7 @@ You can use conditional directives to enable a line of CSS code when some condit
 
 || *`#ifdef`* _`MACRO_NAME`_ || Will process if a macro named `MACRO_NAME` exists. ||
 || *`#ifndef`* _`MACRO_NAME`_ || Will process if a macro named `MACRO_NAME` does not exists. ||
-|| *`#ifexpr`* _`expression`_ || (R8) Will process if an [ExpressionGuide expression] evaluates to true. ||
+|| *`#ifexpr`* _`expression`_ || (R8) Will process if an [ExpressionSyntax expression] evaluates to true. ||
 || *`#endif`* || Ends the matching conditional directive. ||
 || *`#else`* || (R8) Will process if the last matched conditional directive is true. ||
 
@@ -197,11 +197,88 @@ When a set of declarations are used multiple times, you can specify an abstract 
 }
 }}}
 
-=Color Processing=
+=8. Color Processing=
 
 This is one of unique things in DtCSS. It comes with [ColorProcessing Color Processing].
 
   * [ColorProcessing Read about color processing]
+
+=9. Expressions=
+
+DtCSS can also do some simple maths and strings calculation and manipulation.
+
+One limitations is the processed file will not be cached if an expression is present in the CSS file.
+
+== Using expressions in conditional expression. ==
+
+You can use the `#ifexpr` to make it process the code only if the expression evaluates to true.
+
+===Input Example===
+The following example makes heavy use of directives.
+
+{{{
+#ifexpr date('m-d') == '04-01'
+	#define APRIL_FOOLS 1
+#endif
+
+#define BACKGROUND_COLOR white
+
+#ifdef APRIL_FOOLS
+	#define BACKGROUND_COLOR pink
+#endif
+
+body {
+	background: BACKGROUND_COLOR;
+}
+}}}
+
+From the above code, the background color will be pink on April 1st of any year.
+
+== Using expressions in CSS values ==
+
+The expression must be in between `<#` and `#>`.
+
+===Input Example===
+{{{
+#define WINDOW_WIDTH 500px
+
+.floating {
+	position: absolute;
+	top: 50px;
+	left: 50%;
+	width: WINDOW_WIDTH;
+	margin-left: <# intval(WINDOW_WIDTH) / -2 . "px" #>
+}
+}}}
+
+===Output===
+{{{
+.floating {
+    position: absolute;
+    top: 50px;
+    left: 50%;
+    width: 500px;
+    margin-left: -250px;
+}
+}}}
+
+The expression looks like in PHP, but it is a bit more simple.
+
+In DtCSS, you can write expressions like in PHP, like this:
+
+{{{
+intval(WINDOW_WIDTH) / -2 . "px"
+}}}
+
+Or you may use a more simple syntax like this:
+
+{{{
+int WINDOW_WIDTH / -2 "px"
+}}}
+
+  * [ExpressionSyntax Expression Syntax Guide]
+
+
 
 
 

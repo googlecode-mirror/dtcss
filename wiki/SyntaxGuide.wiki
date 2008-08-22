@@ -262,6 +262,8 @@ The expression must be in between `<#` and `#>`.
 }
 }}}
 
+== Syntax ==
+
 The expression looks like in PHP, but it is a bit more simple.
 
 In DtCSS, you can write expressions like in PHP, like this:
@@ -277,8 +279,6 @@ int WINDOW_WIDTH / -2 "px"
 }}}
 
   * [ExpressionSyntax Expression Syntax Guide]
-
-
 
 
 

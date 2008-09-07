@@ -203,7 +203,7 @@ This is one of unique things in DtCSS. It comes with [ColorProcessing Color Proc
 
   * [ColorProcessing Read about color processing]
 
-=9. Expressions=
+=9. Expressions (R8)=
 
 DtCSS can also do some simple maths and strings calculation and manipulation.
 
@@ -279,6 +279,59 @@ int WINDOW_WIDTH / -2 "px"
 }}}
 
   * [ExpressionSyntax Expression Syntax Guide]
+
+= Property Grouping (R27) =
+
+Commas can be used to group properties together. For example,
+
+{{{
+margin, padding: 0;
+}}}
+
+Left, top, right, bottom can be combined as one.
+
+{{{
+border-top-left-color: #f5f5f5;
+}}}
+
+== Input Example ==
+{{{
+#define BUTTON_COLOR red
+.button {
+	padding, margin: 1em;
+	background: shade(1.8, BUTTON_COLOR);
+	color: darker(darker(BUTTON_COLOR));
+	border-top-left: 1px solid shade(1.95, BUTTON_COLOR);
+	border-bottom-right: 1px solid shade(1.6, BUTTON_COLOR);
+}
+}}}
+
+== Output ==
+{{{
+.button {
+    padding: 1em;
+    margin: 1em;
+    background: #fecccc;
+    color: #5d1f1f;
+    border-top: 1px solid #fff2f2;
+    border-left: 1px solid #fff2f2;
+    border-bottom: 1px solid #ff9999;
+    border-right: 1px solid #ff9999;
+}
+}}}
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

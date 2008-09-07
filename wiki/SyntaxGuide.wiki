@@ -7,6 +7,10 @@ DtCSS is under development. When new syntaxes are introduced they will be mentio
 
 For example, if I say (R8) it means that syntax is available on DtCSS R8 and later.
 
+=Features Changelog=
+  * (R27) 10. Property Grouping
+  * (R8) 9. Expressions
+
 =1. Nested CSS ruleset=
 
 You can put rulesets inside of a ruleset. This makes it easier to select elements in the same parents. Just make sure that you have put a semicolon (`;`) before the selector.
@@ -319,8 +323,6 @@ border-top-left-color: #f5f5f5;
     border-right: 1px solid #ff9999;
 }
 }}}
-
-
 
 
 

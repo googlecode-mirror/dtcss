@@ -106,7 +106,7 @@ function DtCSS($file, $css, $macros = array()) {
 
 			/* Now go through each declarations. */
 			foreach ($v as $w) {
-			
+
 				$c = trim($w);
 
 				/* If it is not an opening or closing brace then indent it a bit. */
@@ -134,7 +134,21 @@ function DtCSS($file, $css, $macros = array()) {
 
 				/* Wait, we are not. */
 				} else {
-					$current .= trim($c);
+				
+					/* Let's see if we can make more rules out of it. */
+					if (preg_match('~^([a-z0-9\\-\\s,]+):([\\s\\S]+;)~i', $c, $m)) {
+						
+						$properties = DtCSS__splitproperties($m[1]);
+						$shall_pad = 0;
+						foreach ($properties as $vv) {
+							$current .= ($shall_pad ? "\n    " : '') . $vv . ':' . $m[2];
+							$shall_pad = 1;
+						}
+						
+					} else {
+						$current .= $c;
+					}
+					
 				}
 
 			}
@@ -151,6 +165,39 @@ function DtCSS($file, $css, $macros = array()) {
 
 	return $out;
 
+}
+
+/* Make writing properties easier */
+function DtCSS__splitproperties($x) {
+
+	/* Split CSS */
+	
+	/* First pass split with comma. */
+	$o = array();
+	$t = explode(',', $x);
+	foreach ($t as $v) {
+		
+		/* top left right bottom can be grouped together. */
+		$v = trim($v);
+		if (preg_match('~(?:(?:(?:^|\\-)(?:left|top|right|bottom)){2,4})~i', $v, $m, PREG_OFFSET_CAPTURE)) {
+			$string = $m[0][0];
+			$offset = $m[0][1];
+			if (substr($string, 0, 1) == '-') {
+				$string = substr($string, 1);
+				$offset += 1;
+			}
+			$splitter = explode('-', $string);
+			foreach ($splitter as $w) {
+				$o[] = substr($v, 0, $offset) . $w . substr($v, $offset + strlen($string));
+			}
+		} else {
+			$o[] = $v;
+		}
+		
+	}
+	
+	return $o;
+	
 }
 
 /* This functions loads the color list from */
